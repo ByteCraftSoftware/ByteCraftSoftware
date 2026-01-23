@@ -48,7 +48,9 @@ const Portfolio: React.FC = () => {
             className="bg-white/80 rounded-2xl border border-slate-200/70 p-4 md:p-5 shadow-sm flex flex-col gap-2"
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
-              <h3 className="font-semibold text-sm md:text-base text-slate-900">
+              <h3
+                className={`font-semibold text-sm md:text-base text-slate-900 ${proj.url ? "hover:underline hover:text-blue-600" : ""}`}
+              >
                 {proj.url ? (
                   <a href={proj.url} target="_blank" rel="noopener noreferrer">
                     {proj.name}
