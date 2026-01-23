@@ -8,6 +8,7 @@ const projects = [
     summary:
       "A web app that manages dojo curriculum, requirements, flashcards, and member data.",
     status: "In active development",
+    url: "https://www.dojocompanion.com",
   },
   // {
   //   name: "Study Companion",
@@ -29,6 +30,7 @@ const projects = [
     summary:
       "IoT pet care system with sensors, data tracking, and a cloud dashboard. Because if you can measure it… you can over-engineer it.",
     status: "R&D / prototyping",
+    url: "",
   },
 ];
 
@@ -47,7 +49,13 @@ const Portfolio: React.FC = () => {
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
               <h3 className="font-semibold text-sm md:text-base text-slate-900">
-                {proj.name}
+                {proj.url ? (
+                  <a href={proj.url} target="_blank" rel="noopener noreferrer">
+                    {proj.name}
+                  </a>
+                ) : (
+                  proj.name
+                )}
               </h3>
               <span className="text-[11px] px-2 py-1 rounded-full bg-slate-900 text-slate-50">
                 {proj.status}
