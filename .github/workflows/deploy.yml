@@ -57,33 +57,6 @@ jobs:
           name: dist
           path: dist
 
-      - name: Debug — check secret presence
-        env:
-          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          ACCT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          PROJ: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
-        run: |
-          if [ -z "$TOKEN" ]; then echo "CLOUDFLARE_API_TOKEN is EMPTY"; else echo "CLOUDFLARE_API_TOKEN is set (length: ${#TOKEN})"; fi
-          if [ -z "$ACCT" ]; then echo "CLOUDFLARE_ACCOUNT_ID is EMPTY"; else echo "CLOUDFLARE_ACCOUNT_ID is set (length: ${#ACCT}, value: $ACCT)"; fi
-          if [ -z "$PROJ" ]; then echo "CLOUDFLARE_PAGES_PROJECT is EMPTY"; else echo "CLOUDFLARE_PAGES_PROJECT is set: $PROJ"; fi
-
-      - name: Debug — verify Cloudflare credentials
-        env:
-          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          ACCT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          PROJ: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
-        run: |
-          echo "=== Token verify ==="
-          curl -sS -o /tmp/verify.json -w "HTTP %{http_code}\n" \
-            -H "Authorization: Bearer $TOKEN" \
-            https://api.cloudflare.com/client/v4/user/tokens/verify
-          cat /tmp/verify.json | head -c 400; echo
-          echo "=== Pages project lookup ==="
-          curl -sS -o /tmp/proj.json -w "HTTP %{http_code}\n" \
-            -H "Authorization: Bearer $TOKEN" \
-            "https://api.cloudflare.com/client/v4/accounts/$ACCT/pages/projects/$PROJ"
-          cat /tmp/proj.json | head -c 400; echo
-
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
