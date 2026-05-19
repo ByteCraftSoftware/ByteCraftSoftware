@@ -1,7 +1,15 @@
 import React from "react";
 import Section from "./Section";
 
-const projects = [
+type Project = {
+  name: string;
+  role: string;
+  summary: string;
+  status: string;
+  url: string;
+};
+
+const projects: Project[] = [
   {
     name: "Dojo Companion",
     role: "Architecture, full-stack development",
@@ -48,16 +56,8 @@ const Portfolio: React.FC = () => {
             className="bg-white/80 rounded-2xl border border-slate-200/70 p-4 md:p-5 shadow-sm flex flex-col gap-2"
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
-              <h3
-                className={`font-semibold text-sm md:text-base text-slate-900 ${proj.url ? "hover:underline hover:text-blue-600" : ""}`}
-              >
-                {proj.url ? (
-                  <a href={proj.url} target="_blank" rel="noopener noreferrer">
-                    {proj.name}
-                  </a>
-                ) : (
-                  proj.name
-                )}
+              <h3 className="font-semibold text-sm md:text-base text-slate-900">
+                {proj.name}
               </h3>
               <span className="text-[11px] px-2 py-1 rounded-full bg-slate-900 text-slate-50">
                 {proj.status}
@@ -67,6 +67,27 @@ const Portfolio: React.FC = () => {
               {proj.role}
             </p>
             <p className="text-xs md:text-sm text-slate-700">{proj.summary}</p>
+
+            {proj.url && (
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                <a
+                  href={proj.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 text-[11px] md:text-xs font-semibold rounded-full bg-brand-orange text-white shadow-brand-soft hover:translate-y-[1px] transition-transform"
+                >
+                  Visit {proj.name} <span aria-hidden="true">→</span>
+                </a>
+                <a
+                  href={proj.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] text-slate-500 hover:text-slate-700 hover:underline"
+                >
+                  {proj.url.replace(/^https?:\/\//, "")}
+                </a>
+              </div>
+            )}
           </article>
         ))}
       </div>
