@@ -57,6 +57,16 @@ jobs:
           name: dist
           path: dist
 
+      - name: Debug — check secret presence
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ACCT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJ: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
+        run: |
+          if [ -z "$TOKEN" ]; then echo "CLOUDFLARE_API_TOKEN is EMPTY"; else echo "CLOUDFLARE_API_TOKEN is set (length: ${#TOKEN})"; fi
+          if [ -z "$ACCT" ]; then echo "CLOUDFLARE_ACCOUNT_ID is EMPTY"; else echo "CLOUDFLARE_ACCOUNT_ID is set (length: ${#ACCT})"; fi
+          if [ -z "$PROJ" ]; then echo "CLOUDFLARE_PAGES_PROJECT is EMPTY"; else echo "CLOUDFLARE_PAGES_PROJECT is set: $PROJ"; fi
+
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
