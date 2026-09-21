@@ -1,3 +1,30 @@
+# Byte Craft Software — bytecraftsoftware.com
+
+The company brochure site. React + Vite + Tailwind, deployed to Cloudflare Pages by
+`.github/workflows/deploy.yml` on push to `main`. Single page; the nav is anchor links.
+
+## Analytics
+
+Microsoft Clarity, via `src/lib/analytics.ts`, called from `main.tsx`. **Production builds only** —
+developing never shows up as traffic. The project id comes from `VITE_CLARITY_PROJECT_ID` (a repo
+secret, passed through in `deploy.yml`); unset means no analytics at all, which is a supported state.
+The id is not a secret — it travels in the tag URL on every page that loads it.
+
+Same shape as Long Rest and Punchd. DojoCompanion used to load the tag inline in `index.html`, which
+also recorded localhost into the live project; it was moved to this pattern 2026-09-21.
+
+## Privacy policy
+
+`public/privacy.html`, linked from the footer. Static, self-contained styling — the sibling apps
+share a `policy.css`, but theirs is a dark sheet and this site is light, so reusing it would look
+broken.
+
+⚠️ **The contact form does not send anything.** `src/components/Contact.tsx` calls
+`preventDefault()` and sets a "sent" flag, and the page tells the visitor so in as many words. See
+the note in that file.
+
+---
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

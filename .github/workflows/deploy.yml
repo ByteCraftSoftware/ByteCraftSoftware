@@ -39,6 +39,11 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          # Microsoft Clarity project id. Public by design (it is in the tag URL).
+          # Unset means no analytics at all, which is the supported state for any
+          # build that is not production.
+          VITE_CLARITY_PROJECT_ID: ${{ secrets.VITE_CLARITY_PROJECT_ID }}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

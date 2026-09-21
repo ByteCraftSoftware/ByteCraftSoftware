@@ -39,6 +39,12 @@ const Footer: React.FC = () => {
           <a href="#contact" className="hover:text-brand-orange transition-colors">
             Contact Us
           </a>
+          <span aria-hidden="true" className="text-slate-300">·</span>
+          {/* A full page load, not a hash link: privacy.html is a static file in
+              public/, not a route this SPA knows about. */}
+          <a href="/privacy.html" className="hover:text-brand-orange transition-colors">
+            Privacy
+          </a>
         </nav>
       </div>
     </footer>
