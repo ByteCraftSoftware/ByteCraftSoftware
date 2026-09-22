@@ -23,6 +23,24 @@ declares a peer dependency on `@cloudflare/workers-types@^4`, this repo is on `^
 before it ever reaches Cloudflare — reported only as `The process '/usr/local/bin/npm' failed with
 exit code 1`. An empty workspace has nothing to reconcile. (Tried and reverted 2026-09-22.)
 
+## Images
+
+`public/bytecraft-logo.png` and the favicons are **derivatives**, generated from
+`design/bytecraft-logo-1024.png` by `node tools/make-logos.cjs` and committed. That script also
+writes Long Rest's on-screen icons; this is the only one of the four repos with `sharp`, the same
+arrangement `tools/make-og.cjs` uses.
+
+The logo used to be the 1024x1024, 1.4 MB master, served to fill a 28px slot in the header — on a
+slow connection it took over a minute. It is 96px and 4 KB now. **Do not point an `<img>` at a
+master or a manifest icon**; add a size to `tools/make-logos.cjs` instead.
+
+The script also rebuilds the favicons for this repo and Punchd: 16/32/48 frames, PNG-compressed
+inside the ICO. Ours was 192 KB and Punchd's was 167 KB — nine frames up to 256px, stored as
+uncompressed BMP — for a file every page load fetches. They are ~4 KB each now.
+
+`public/og.png` is exempt — it is 1200x630 because that is what social scrapers crop from, and
+visitors never download it.
+
 ## Analytics
 
 Microsoft Clarity, via `src/lib/analytics.ts`, called from `main.tsx`. **Production builds only** —
