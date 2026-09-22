@@ -19,6 +19,8 @@ const Header: React.FC = () => {
             <img
               src="/bytecraft-logo.png"
               alt="Byte Craft Software logo"
+              width={28}
+              height={28}
               className="h-7 w-7 object-contain"
             />
           </div>

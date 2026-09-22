@@ -40,9 +40,10 @@ const Footer: React.FC = () => {
             Contact Us
           </a>
           <span aria-hidden="true" className="text-slate-600">·</span>
-          {/* A full page load, not a hash link: privacy.html is a static file in
-              public/, not a route this SPA knows about. */}
-          <a href="/privacy.html" className="hover:text-brand-orange transition-colors">
+          {/* A full page load, not a hash link: the privacy page is a static file
+              in public/, not a route this SPA knows about. Extensionless because
+              Cloudflare Pages 308s /privacy.html to /privacy. */}
+          <a href="/privacy" className="hover:text-brand-orange transition-colors">
             Privacy
           </a>
         </nav>
