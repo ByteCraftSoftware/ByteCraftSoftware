@@ -66,6 +66,38 @@ const TARGETS = [
     out: 'C:/Repos/LongRest/web/public/icons/icon-256.png',
     size: 256, // landing hero, 112px
   },
+
+  // ── Apple touch icons ──────────────────────────────────────────────────
+  //
+  // iOS ignores the web manifest's icons entirely and reads only
+  // `rel="apple-touch-icon"`. It does NOT support transparency there: it
+  // composites the alpha onto WHITE and then applies its own mask, which is
+  // slightly wider than the rounded corners baked into this artwork — so a
+  // keyed `icon-512` lands on the home screen with white wedges in its
+  // corners. Long Rest hit this first and fixed it with a dedicated opaque
+  // file; the other two kept pointing at the manifest icon and kept the bug.
+  //
+  // Each `flattenTo` is the artwork's OWN background, sampled out of the icon
+  // rather than picked by eye. Flattening onto anything else leaves a visible
+  // ring where the rounded corners used to be.
+  {
+    from: 'C:/Repos/DojoCompanion/web/public/icons/icon-512.png',
+    out: 'C:/Repos/DojoCompanion/web/public/icons/apple-touch-icon.png',
+    size: 180,
+    flattenTo: '#e67731',
+  },
+  {
+    from: 'C:/Repos/Punchd/web/public/icons/icon-512.png',
+    out: 'C:/Repos/Punchd/web/public/icons/apple-touch-icon.png',
+    size: 180,
+    flattenTo: '#7c3aed',
+  },
+  {
+    from: 'C:/Repos/LongRest/web/public/icons/icon-512.png',
+    out: 'C:/Repos/LongRest/web/public/icons/apple-touch-icon.png',
+    size: 180,
+    flattenTo: '#014f5c',
+  },
 ];
 
 /**
