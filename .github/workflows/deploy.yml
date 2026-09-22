@@ -45,28 +45,38 @@ jobs:
           # build that is not production.
           VITE_CLARITY_PROJECT_ID: ${{ secrets.VITE_CLARITY_PROJECT_ID }}
 
+      # `functions/` travels with `dist/` because Wrangler picks Pages Functions
+      # up from the working directory, not from the asset directory. Shipping it
+      # in the artifact keeps the deploy job free of a checkout — see the note
+      # on the publish step for why that matters.
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dist
-          path: dist
+          name: site
+          path: |
+            dist
+            functions
 
   deploy:
     name: Deploy to Cloudflare Pages
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # Needed for `functions/` — Wrangler picks Pages Functions up from the
-      # working directory, not from the uploaded asset directory. Without a
-      # checkout here the site deploys fine and /api/contact silently 404s.
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Download artifact
+      # Unpacks to ./dist and ./functions, which is the layout `pages deploy`
+      # expects: the asset directory named on the command line, and the
+      # Functions directory beside it in the working directory.
+      #
+      # DO NOT add a checkout here. wrangler-action runs `npm i wrangler@3.90.0`
+      # in this workspace, and wrangler 3 declares a peer dependency on
+      # @cloudflare/workers-types@^4 while this repo is on ^5. With a
+      # package.json present npm has to reconcile the two, fails ERESOLVE, and
+      # the action dies before it reaches Cloudflare. An empty workspace has
+      # nothing to reconcile.
+      - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: dist
-          path: dist
+          name: site
+          path: .
 
       # wrangler-action, not pages-action: Cloudflare DELETED the pages-action
       # repository on 2026-09-18 with no notice, so every workflow pinned to it

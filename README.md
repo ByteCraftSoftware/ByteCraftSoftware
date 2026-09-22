@@ -11,9 +11,17 @@ step runs. GitHub reports it as *"Unable to resolve actions. Cannot access repos
 'cloudflare/pages-action'"*, which reads like a permissions problem and is not one. Punchd, Long
 Rest and DojoCompanion were moved the same week; this repo was the straggler, fixed 2026-09-21.
 
-The `deploy` job checks the repo out as well as downloading `dist` — Wrangler picks Pages Functions
-up from the working directory, not from the uploaded asset directory. Drop that checkout and the
-site deploys fine while `/api/contact` 404s.
+Wrangler picks Pages Functions up from the **working directory**, not from the asset directory named
+on the command line, so `functions/` has to be present next to `dist/` when `pages deploy` runs. The
+build job ships both in one artifact and the deploy job unpacks it to the workspace root. Lose
+`functions/` from that artifact and the site deploys fine while `/api/contact` 404s.
+
+⚠️ **Do not add a checkout to the `deploy` job.** It looks like the obvious way to get `functions/`
+there, and it fails: `wrangler-action` runs `npm i wrangler@3.90.0` in that workspace, wrangler 3
+declares a peer dependency on `@cloudflare/workers-types@^4`, this repo is on `^5`, and with a
+`package.json` present npm has to reconcile them. It can't, exits ERESOLVE, and the action dies
+before it ever reaches Cloudflare — reported only as `The process '/usr/local/bin/npm' failed with
+exit code 1`. An empty workspace has nothing to reconcile. (Tried and reverted 2026-09-22.)
 
 ## Analytics
 
