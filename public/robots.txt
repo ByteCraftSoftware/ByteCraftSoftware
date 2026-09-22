@@ -1,0 +1,13 @@
+# Cloudflare Pages serves files in public/ BEFORE the SPA fallback, which is the
+# only reason this works: without a real file here, `/*  /index.html  200` in
+# _redirects answers /robots.txt with the app shell, and a crawler asking for a
+# robots file gets HTML. That was the state until 2026-09-22.
+User-agent: *
+Allow: /
+
+# Signed-in areas. Every one of these returns the SPA shell to a crawler — no
+# content, nothing to index — so there is nothing to gain by letting them be
+# fetched. Note this is a crawling hint, NOT access control; the server is what
+# actually protects them.
+
+Sitemap: https://www.bytecraftsoftware.com/sitemap.xml

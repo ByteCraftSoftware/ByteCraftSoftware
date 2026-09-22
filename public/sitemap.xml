@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PUBLIC pages only. A sitemap is a list of URLs you want indexed, so anything
+  behind a login does not belong here: a crawler that follows it gets the empty
+  app shell, which is at best wasted and at worst indexed as a blank page.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.bytecraftsoftware.com/</loc></url>
+  <url><loc>https://www.bytecraftsoftware.com/privacy.html</loc></url>
+</urlset>

@@ -33,6 +33,19 @@ The id is not a secret — it travels in the tag URL on every page that loads it
 Same shape as Long Rest and Punchd. DojoCompanion used to load the tag inline in `index.html`, which
 also recorded localhost into the live project; it was moved to this pattern 2026-09-21.
 
+## Open Graph
+Long Rest, Punchd and DojoCompanion — this is the only one of the four with `sharp` installed. Re-run it (`node tools/make-og.cjs`) only when a logo, name
+or tagline changes; the PNGs are committed.
+
+Sized for a feed rendering it around 500px wide — everything is built to survive being shown at
+40%, which is why the product name is 76px and nothing is smaller than the 27px domain line.
+`twitter:card` is `summary_large_image`; under plain `summary` the same file is cropped to a small
+square and the wording is lost.
+
+⚠️ **Facebook caches OG data per URL, aggressively.** After deploying a change to any og: tag,
+re-scrape at <https://developers.facebook.com/tools/debug/> or the old card keeps being served —
+including to people who have never shared the link before.
+
 ## Privacy policy
 
 `public/privacy.html`, linked from the footer. Static, self-contained styling — the sibling apps
