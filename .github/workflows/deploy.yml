@@ -56,18 +56,38 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      # Needed for `functions/` — Wrangler picks Pages Functions up from the
+      # working directory, not from the uploaded asset directory. Without a
+      # checkout here the site deploys fine and /api/contact silently 404s.
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
 
+      # wrangler-action, not pages-action: Cloudflare DELETED the pages-action
+      # repository on 2026-09-18 with no notice, so every workflow pinned to it
+      # fails at resolution before a step runs. GitHub reports that as "Unable to
+      # resolve actions. Cannot access repositories 'cloudflare/pages-action'",
+      # which reads like a permissions problem and is not one. Punchd, Long Rest
+      # and DojoCompanion were moved the same week; this repo was the straggler.
+      #
+      # Not a rename: project name, directory and branch all move into the
+      # wrangler command. The branch expression is kept exactly as it was — this
+      # job also runs on pull requests, and the head ref is what makes those land
+      # as Pages PREVIEW deployments rather than overwriting production. It is
+      # quoted because a branch name may contain a slash.
       - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
-          directory: dist
+          command: >-
+            pages deploy dist
+            --project-name=${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
+            --branch="${{ github.event_name == 'pull_request' && github.head_ref || 'main' }}"
+          # Optional; only creates the GitHub Deployments entries.
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.event_name == 'pull_request' && github.head_ref || 'main' }}

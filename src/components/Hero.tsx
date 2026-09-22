@@ -6,7 +6,7 @@ const Hero: React.FC = () => {
       <div className="max-w-5xl mx-auto px-4">
         <div className="grid md:grid-cols-[1.4fr,1fr] gap-8 items-center">
           {/* Main hero card */}
-          <div className="bg-[rgba(239,118,3,0.04)] border border-[rgba(239,118,3,0.18)] rounded-3xl shadow-brand-soft p-6 md:p-9">
+          <div className="bg-brand-surface border border-[rgba(239,118,3,0.25)] rounded-3xl shadow-brand-soft p-6 md:p-9">
             <p className="text-xs font-semibold tracking-[0.22em] uppercase text-brand-orange mb-3">
               Byte Craft Software
             </p>

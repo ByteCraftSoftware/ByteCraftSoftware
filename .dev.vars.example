@@ -1,0 +1,11 @@
+# Local values for the Pages Functions in `functions/`. Copy to `.dev.vars`
+# (gitignored) and fill in a real key to exercise sending from `npm run
+# dev:functions`. In production these are set on the Cloudflare Pages project,
+# under Settings -> Environment variables.
+
+# Required. Resend API key, from https://resend.com/api-keys. Secret.
+RESEND_API_KEY=re_your_key_here
+
+# Optional; these are the defaults the code falls back to.
+# CONTACT_TO=support@bytecraftsoftware.com
+# CONTACT_FROM=Byte Craft Software <support@bytecraftsoftware.com>

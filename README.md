@@ -3,6 +3,18 @@
 The company brochure site. React + Vite + Tailwind, deployed to Cloudflare Pages by
 `.github/workflows/deploy.yml` on push to `main`. Single page; the nav is anchor links.
 
+## Deploy
+
+`cloudflare/wrangler-action@v3`, **not** `cloudflare/pages-action` — Cloudflare deleted that
+repository on 2026-09-18, so any workflow still pinned to it fails at action resolution before a
+step runs. GitHub reports it as *"Unable to resolve actions. Cannot access repositories
+'cloudflare/pages-action'"*, which reads like a permissions problem and is not one. Punchd, Long
+Rest and DojoCompanion were moved the same week; this repo was the straggler, fixed 2026-09-21.
+
+The `deploy` job checks the repo out as well as downloading `dist` — Wrangler picks Pages Functions
+up from the working directory, not from the uploaded asset directory. Drop that checkout and the
+site deploys fine while `/api/contact` 404s.
+
 ## Analytics
 
 Microsoft Clarity, via `src/lib/analytics.ts`, called from `main.tsx`. **Production builds only** —
@@ -19,9 +31,37 @@ also recorded localhost into the live project; it was moved to this pattern 2026
 share a `policy.css`, but theirs is a dark sheet and this site is light, so reusing it would look
 broken.
 
-⚠️ **The contact form does not send anything.** `src/components/Contact.tsx` calls
-`preventDefault()` and sets a "sent" flag, and the page tells the visitor so in as many words. See
-the note in that file.
+## Contact form
+
+`src/components/Contact.tsx` posts to **`/api/contact`**, a Cloudflare Pages Function
+(`functions/api/contact.ts`) that sends the message through **Resend**. A Pages Function rather than
+a separate API because it deploys with the site, shares its origin (no CORS), and keeps the Resend
+key out of the bundle.
+
+Mail goes **to and from `support@bytecraftsoftware.com`**, with the visitor's address as `Reply-To`
+so hitting Reply in the inbox answers them. Not `noreply@` — Long Rest sent from `noreply@` and
+deliveries failed silently.
+
+Configuration lives on the Pages project (**Settings → Environment variables**), not in the repo:
+
+| Variable | Required | Notes |
+|---|---|---|
+| `RESEND_API_KEY` | yes, secret | Unset makes the endpoint return 503 and log. Never a silent success. |
+| `CONTACT_TO` | no | Defaults to `support@bytecraftsoftware.com`. |
+| `CONTACT_FROM` | no | Defaults to `Byte Craft Software <support@bytecraftsoftware.com>`. Must be a Resend-verified domain. |
+
+Set them for **Production and Preview** — a preview deploy with no key has a contact form that 503s.
+
+**Locally:** copy `.dev.vars.example` to `.dev.vars` (gitignored) and fill in the key, then run both
+servers — `npm run dev` (Vite, :5200) and `npm run dev:functions` (Wrangler, :8788). Vite proxies
+`/api` to Wrangler; without the second server, form posts fail at :8788, which is deliberate — the
+alternative is a form that works in dev and only breaks in production.
+
+**Spam:** a honeypot field (`company`) plus field-length caps. A filled honeypot gets the same
+`{ok:true}` a real send does, so a bot cannot tell rejection from acceptance. There is **no rate
+limit** — the endpoint can be POSTed to directly. If that ever gets abused, the fix is Cloudflare
+Turnstile on the form rather than anything cleverer server-side.
+
 
 ---
 

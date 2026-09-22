@@ -24,22 +24,22 @@ const Footer: React.FC = () => {
   return (
     <footer
       ref={ref}
-      className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200/70 bg-slate-100/85 backdrop-blur"
+      className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-brand-ink/85 backdrop-blur"
     >
-      <div className="max-w-5xl mx-auto px-4 py-4 text-xs text-slate-500 flex flex-col md:flex-row items-center justify-center gap-x-3 gap-y-2 text-center">
+      <div className="max-w-5xl mx-auto px-4 py-4 text-xs text-slate-400 flex flex-col md:flex-row items-center justify-center gap-x-3 gap-y-2 text-center">
         <p>
           © {new Date().getFullYear()} Byte Craft Software. All rights reserved.
         </p>
-        <span aria-hidden="true" className="hidden md:inline text-slate-300">·</span>
+        <span aria-hidden="true" className="hidden md:inline text-slate-600">·</span>
         <nav className="flex items-center gap-x-3">
           <a href="#about" className="hover:text-brand-orange transition-colors">
             About
           </a>
-          <span aria-hidden="true" className="text-slate-300">·</span>
+          <span aria-hidden="true" className="text-slate-600">·</span>
           <a href="#contact" className="hover:text-brand-orange transition-colors">
             Contact Us
           </a>
-          <span aria-hidden="true" className="text-slate-300">·</span>
+          <span aria-hidden="true" className="text-slate-600">·</span>
           {/* A full page load, not a hash link: privacy.html is a static file in
               public/, not a route this SPA knows about. */}
           <a href="/privacy.html" className="hover:text-brand-orange transition-colors">

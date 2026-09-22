@@ -10,7 +10,7 @@ import Footer from "./components/Footer";
 const App: React.FC = () => {
   return (
     <div
-      className="min-h-screen flex flex-col bg-slate-100"
+      className="min-h-screen flex flex-col bg-brand-ink"
       style={{ paddingBottom: "var(--footer-h, 0px)" }}
     >
       <Header />

@@ -7,9 +7,27 @@ html {
   scroll-behavior: smooth;
 }
 
+/* The dark page backdrop lives here AND in tailwind.config.cjs as
+   `brand.ink` — this copy is what paints overscroll and the area behind a
+   short page, which a utility class on a div cannot reach. Change both. */
 body {
-  color: #0f172a; /* slate-900 */
-  background-color: #e2e8f0; /* bg-slate-100 */
+  color: #e2e8f0; /* slate-200 */
+  background-color: #0f172a; /* brand.ink */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Chrome paints an autofilled field with its own background — a pale
+   blue-grey that reads as "greyed out" next to the untouched message box,
+   which is not autofillable and so stays white. The background cannot be
+   overridden directly; an inset shadow the size of the field is the one way
+   to cover it, and -webkit-text-fill-color is what actually colours the text
+   in that state. Only the name and email fields are ever affected. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  box-shadow: 0 0 0 1000px #ffffff inset;
+  -webkit-text-fill-color: #0f172a;
+  caret-color: #0f172a;
 }

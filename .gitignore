@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Wrangler / Pages Functions
+# .dev.vars holds the local Resend key. Never commit it; .dev.vars.example
+# documents the shape instead.
+.dev.vars
+.wrangler

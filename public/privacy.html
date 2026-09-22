@@ -7,10 +7,15 @@
 <meta name="description" content="Privacy Policy for bytecraftsoftware.com, the website of Byte Craft Software (Chesterfield, Michigan, USA)." />
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <!--
-  Self-contained on purpose. The sibling apps share a policy.css, but theirs is a
-  DARK sheet and this site is light with an orange accent — reusing it would look
-  broken. This page is static and rarely edited, so one <style> block it stays in
-  is less to keep in sync than a stylesheet that only one page uses.
+  Self-contained on purpose. The sibling apps share a policy.css, and although
+  this page is now dark-backed like theirs, the resemblance stops at the backdrop
+  — here the content sits on WHITE cards, theirs is a dark sheet throughout. This
+  page is static and rarely edited, so one <style> block it stays in is less to
+  keep in sync than a stylesheet that only one page uses.
+
+  The palette mirrors the main site: --bg is brand.ink from tailwind.config.cjs.
+  Change one and change the other, or the footer link leads somewhere that looks
+  like a different company.
 -->
 <style>
   :root {
@@ -19,7 +24,8 @@
     --muted: #64748b;
     --line: #e2e8f0;
     --card: #ffffff;
-    --bg: #f1f5f9;
+    --bg: #0f172a;        /* brand.ink — the dark page backdrop */
+    --on-bg: #e2e8f0;     /* text that sits directly on the backdrop */
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -31,10 +37,13 @@
     -webkit-font-smoothing: antialiased;
   }
   header {
-    border-bottom: 1px solid var(--line);
-    background: rgba(241, 245, 249, .85);
+    border-bottom: 1px solid rgba(255, 255, 255, .10);
+    background: rgba(15, 23, 42, .85);
     backdrop-filter: blur(6px);
     position: sticky; top: 0; z-index: 10;
+    /* The bar sits on the dark backdrop, so its own text cannot inherit --ink
+       (which is nearly the same colour as the bar). */
+    color: var(--on-bg);
   }
   .bar {
     max-width: 52rem; margin: 0 auto; padding: 14px 16px;
@@ -43,7 +52,7 @@
   .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
   .brand img { height: 30px; width: auto; display: block; }
   .brand span { font-weight: 700; letter-spacing: -.01em; }
-  .back { font-size: 13px; color: var(--muted); text-decoration: none; white-space: nowrap; }
+  .back { font-size: 13px; color: #94a3b8; text-decoration: none; white-space: nowrap; }
   .back:hover { color: var(--orange); }
 
   main { max-width: 52rem; margin: 0 auto; padding: 32px 16px 64px; }
@@ -51,8 +60,9 @@
     display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .09em;
     text-transform: uppercase; color: var(--orange); margin-bottom: 6px;
   }
-  h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 6px; letter-spacing: -.02em; }
-  .updated { color: var(--muted); font-size: 13px; margin: 0 0 28px; }
+  /* h1 and the updated line sit on the backdrop, not on a card. */
+  h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 6px; letter-spacing: -.02em; color: var(--on-bg); }
+  .updated { color: #94a3b8; font-size: 13px; margin: 0 0 28px; }
 
   .toc {
     background: var(--card); border: 1px solid var(--line); border-radius: 16px;
@@ -76,7 +86,7 @@
   li { margin-bottom: 6px; }
   a { color: var(--orange); }
   strong { font-weight: 650; }
-  footer { max-width: 52rem; margin: 0 auto; padding: 0 16px 48px; color: var(--muted); font-size: 12px; }
+  footer { max-width: 52rem; margin: 0 auto; padding: 0 16px 48px; color: #94a3b8; font-size: 12px; }
 </style>
 </head>
 <body>
@@ -125,7 +135,9 @@
       only two circumstances:</p>
     <ul>
       <li><strong>If you contact us.</strong> The name, email address, and message you type into the
-        contact form, or that you send us by email directly.</li>
+        contact form, or that you send us by email directly. The message we receive also notes when
+        it was sent, your browser's user-agent string, and the country the request came from, which
+        we use to tell genuine enquiries from automated spam.</li>
       <li><strong>Ordinary web analytics.</strong> Which pages are visited, roughly where in the
         world the visit came from, what kind of device and browser, and how the page is scrolled and
         clicked. See <a href="#cookies">Cookies &amp; Analytics</a>.</li>
@@ -167,6 +179,9 @@
         serve the page and to protect the site from abuse.</li>
       <li><strong>Microsoft Clarity</strong> &mdash; website analytics and session replay. See
         <a href="#cookies">Cookies &amp; Analytics</a> above.</li>
+      <li><strong>Resend</strong> &mdash; email delivery. When you submit the contact form, the name,
+        email address, and message you entered are passed to Resend so the message can be delivered
+        to our inbox. Resend receives nothing about visitors who do not use the form.</li>
     </ul>
   </section>
 
