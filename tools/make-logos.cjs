@@ -38,22 +38,60 @@ const fs = require('fs');
  */
 const BC_MASTER = 'C:/Repos/ByteCraftSoftware/design/bytecraft-logo-512.png';
 
+/**
+ * Turn the mark's black backdrop into transparency by making alpha follow
+ * brightness: pure black becomes fully transparent, the glow fades out as it
+ * dims, and the gold stays solid.
+ *
+ * NOT `tools/key-bg.cjs`, which is the right tool for the sibling apps and the
+ * wrong one here. That flood-fills inward from the border with a tolerance,
+ * which assumes a FLAT tile. This mark has a glow that fades gradually into
+ * black, so a tolerance key cuts it at whatever brightness the threshold lands
+ * on and leaves a hard dark halo — and because the fill only removes
+ * background connected to the edge, the black enclosed INSIDE the ring
+ * survives and shows as a black disc on any light background.
+ *
+ * The cost of this approach is that the artwork's own dark bevel shading goes
+ * semi-transparent too, so the mark reads slightly lighter. On the dark header
+ * it is the right trade; it is why `apple-touch-icon` opts out below and keeps
+ * the opaque original, which is also what iOS wants.
+ */
+async function keyGlowToAlpha(src) {
+  const { data, info } = await sharp(src)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+  for (let i = 0; i < data.length; i += info.channels) {
+    data[i + 3] = Math.max(data[i], data[i + 1], data[i + 2]);
+  }
+
+  return sharp(data, {
+    raw: { width: info.width, height: info.height, channels: 4 },
+  })
+    .png()
+    .toBuffer();
+}
+
 const TARGETS = [
   // ── Byte Craft Software ────────────────────────────────────────────────
   {
     from: BC_MASTER,
     out: 'C:/Repos/ByteCraftSoftware/public/bytecraft-logo.png',
     size: 96, // header renders it at 28px, privacy page at 30px
+    keyGlow: true, // sits in a tinted, rounded chip — a black square shows
   },
   {
     from: BC_MASTER,
     out: 'C:/Repos/ByteCraftSoftware/public/favicon-32.png',
     size: 32,
+    keyGlow: true, // a tab strip may be light or dark; transparency suits both
   },
   {
     from: BC_MASTER,
     out: 'C:/Repos/ByteCraftSoftware/public/favicon-16.png',
     size: 16,
+    keyGlow: true,
   },
   {
     from: BC_MASTER,
@@ -124,6 +162,7 @@ const ICOS = [
   {
     from: BC_MASTER,
     out: 'C:/Repos/ByteCraftSoftware/public/favicon.ico',
+    keyGlow: true,
   },
   {
     from: 'C:/Repos/Punchd/web/public/icons/icon-512.png',
@@ -133,12 +172,13 @@ const ICOS = [
 
 const ICO_SIZES = [16, 32, 48];
 
-async function buildIco(from, out) {
+async function buildIco(from, out, keyGlow = false) {
+  const source = keyGlow ? await keyGlowToAlpha(from) : from;
   const frames = [];
   for (const size of ICO_SIZES) {
     frames.push({
       size,
-      data: await sharp(from)
+      data: await sharp(source)
         .resize(size, size, {
           fit: 'contain',
           background: { r: 0, g: 0, b: 0, alpha: 0 },
@@ -179,7 +219,8 @@ async function buildIco(from, out) {
 
 async function main() {
   for (const t of TARGETS) {
-    let img = sharp(t.from).resize(t.size, t.size, {
+    const source = t.keyGlow ? await keyGlowToAlpha(t.from) : t.from;
+    let img = sharp(source).resize(t.size, t.size, {
       fit: 'contain',
       background: { r: 0, g: 0, b: 0, alpha: 0 },
     });
@@ -199,7 +240,7 @@ async function main() {
   }
 
   for (const ico of ICOS) {
-    const size = await buildIco(ico.from, ico.out);
+    const size = await buildIco(ico.from, ico.out, ico.keyGlow);
     const repo = ico.out.split('/')[3];
     console.log(
       `${'favicon.ico'.padEnd(24)} ${ICO_SIZES.join('/')}  ${(size / 1024).toFixed(1)} KB  (${repo})`,
