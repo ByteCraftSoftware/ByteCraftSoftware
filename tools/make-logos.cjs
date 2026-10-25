@@ -28,31 +28,39 @@
 const sharp = require('sharp');
 const fs = require('fs');
 
+/**
+ * The Byte Craft mark, 2026-10-24: the gold circuit-B with the cross. Supplied
+ * at 512 and already opaque on black, so nothing here flattens it.
+ *
+ * `bytecraft-logo-1024.png` beside it is the PREVIOUS mark — flat orange on
+ * transparent — kept for history. Do not point this at that file; it will
+ * silently reinstate the old logo everywhere on the next run.
+ */
+const BC_MASTER = 'C:/Repos/ByteCraftSoftware/design/bytecraft-logo-512.png';
+
 const TARGETS = [
   // ── Byte Craft Software ────────────────────────────────────────────────
   {
-    from: 'C:/Repos/ByteCraftSoftware/design/bytecraft-logo-1024.png',
+    from: BC_MASTER,
     out: 'C:/Repos/ByteCraftSoftware/public/bytecraft-logo.png',
     size: 96, // header renders it at 28px, privacy page at 30px
   },
   {
-    from: 'C:/Repos/ByteCraftSoftware/design/bytecraft-logo-1024.png',
+    from: BC_MASTER,
     out: 'C:/Repos/ByteCraftSoftware/public/favicon-32.png',
     size: 32,
   },
   {
-    from: 'C:/Repos/ByteCraftSoftware/design/bytecraft-logo-1024.png',
+    from: BC_MASTER,
     out: 'C:/Repos/ByteCraftSoftware/public/favicon-16.png',
     size: 16,
   },
   {
-    from: 'C:/Repos/ByteCraftSoftware/design/bytecraft-logo-1024.png',
+    from: BC_MASTER,
     out: 'C:/Repos/ByteCraftSoftware/public/apple-touch-icon.png',
     size: 180,
-    // iOS composites the alpha onto white and applies its own mask, so this
-    // one is flattened onto the brand dark rather than left transparent —
-    // same rule as Long Rest's apple-touch-icon (see LONG_REST.md).
-    flattenTo: '#151515',
+    // No `flattenTo`: the 2026-10-24 mark is already opaque on black, so there
+    // is no alpha for iOS to composite onto white in the first place.
   },
 
   // ── Long Rest ──────────────────────────────────────────────────────────
@@ -114,7 +122,7 @@ const TARGETS = [
  */
 const ICOS = [
   {
-    from: 'C:/Repos/ByteCraftSoftware/design/bytecraft-logo-1024.png',
+    from: BC_MASTER,
     out: 'C:/Repos/ByteCraftSoftware/public/favicon.ico',
   },
   {
