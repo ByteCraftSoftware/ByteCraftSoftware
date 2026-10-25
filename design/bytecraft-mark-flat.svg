@@ -1,0 +1,26 @@
+<!--
+  The flat companion to the gold mark — same composition (ring, circuit B,
+  cross), redrawn as single-weight line art in brand orange.
+
+  This is NOT a recolour of the rendered logo. Flattening that one to a single
+  colour collapses it: the cross and the B's traces are separated by the bevel's
+  dark gaps, so filling everything orange produces a blob. The shapes have to be
+  drawn as strokes to survive one colour.
+
+  Used for the 32px and 48px favicon frames. Below about 24px the ring and the
+  glyph start to merge, which is what bytecraft-mark-flat-compact.svg is for.
+
+  Stroke weights are deliberate: at a 64 viewBox, 4.5 and 5 render at ~2.2px and
+  ~2.5px when rasterised to 32. Anything thinner greys out at that size instead
+  of reading as a line.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#EF7603" stroke-width="4.5"/>
+  <g fill="none" stroke="#EF7603" stroke-width="5" stroke-linecap="round">
+    <path d="M29 18 V46"/>
+    <path d="M29 18 H38 a7 7 0 0 1 0 14 H29"/>
+    <path d="M29 32 H39 a7 7 0 0 1 0 14 H29"/>
+    <path d="M17 22 V44"/>
+    <path d="M10 29 H24"/>
+  </g>
+</svg>

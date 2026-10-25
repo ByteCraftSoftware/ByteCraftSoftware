@@ -1,0 +1,26 @@
+<!--
+  The 16px variant: the same cross and circuit B, with the ring dropped and the
+  glyph grown into the space it freed.
+
+  The ring is the first thing to go at small sizes. At 16px it costs two pixels
+  of diameter and squeezes the letterform into about ten, so the B's two bowls
+  merge into one dark mass — the mark becomes a circle with something in it.
+  Dropping the ring buys enough room for the bowls to stay open and the cross to
+  stay a cross.
+
+  Losing the ring is a real cost: the silhouette no longer matches the full mark.
+  At 16px nobody reads a silhouette, they read whether two shapes are distinct,
+  so it is the right trade here and the wrong one anywhere larger.
+
+  Stroke 7 at a 64 viewBox lands at 1.75px when rasterised to 16, which survives
+  rounding to the pixel grid.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <g fill="none" stroke="#EF7603" stroke-width="7" stroke-linecap="round">
+    <path d="M30 12 V52"/>
+    <path d="M30 12 H42 a10 10 0 0 1 0 20 H30"/>
+    <path d="M30 32 H44 a10 10 0 0 1 0 20 H30"/>
+    <path d="M14 16 V48"/>
+    <path d="M5 27 H23"/>
+  </g>
+</svg>

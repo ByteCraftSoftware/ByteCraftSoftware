@@ -34,6 +34,22 @@ The logo used to be the 1024x1024, 1.4 MB master, served to fill a 28px slot in 
 slow connection it took over a minute. It is 96px and 4 KB now. **Do not point an `<img>` at a
 master or a manifest icon**; add a size to `tools/make-logos.cjs` instead.
 
+**Two marks, on purpose.** `design/bytecraft-logo-512.png` is the rendered gold logo, used wherever
+it is big enough to read — the site header and the Apple touch icon. `design/bytecraft-mark-flat.svg`
+and `…-flat-compact.svg` are flat line-art companions in `#EF7603`, used for every favicon frame,
+because the rendered mark downscaled to 16px averages into a brown smudge on a dark tab strip and a
+washed peach one on a light one. The compact variant drops the ring, which is the first thing to go
+below ~24px; each file carries its own note on why.
+
+The flat art is a redraw, not a recolour. Flattening the rendered logo to one colour collapses it:
+the cross and the B's traces are separated by the bevel's dark gaps, so filling it all orange gives
+a blob.
+
+The header logo is keyed to transparency by brightness (`keyGlowToAlpha`), not by
+`tools/key-bg.cjs` — that one flood-fills from the border assuming a flat tile, and on glow artwork
+it leaves a hard halo plus a black disc enclosed inside the ring. The Apple touch icon opts out and
+stays opaque, because iOS composites alpha onto white.
+
 The script also rebuilds the favicons for this repo and Punchd: 16/32/48 frames, PNG-compressed
 inside the ICO. Ours was 192 KB and Punchd's was 167 KB — nine frames up to 256px, stored as
 uncompressed BMP — for a file every page load fetches. They are ~4 KB each now.

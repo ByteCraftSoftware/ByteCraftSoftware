@@ -39,6 +39,21 @@ const fs = require('fs');
 const BC_MASTER = 'C:/Repos/ByteCraftSoftware/design/bytecraft-logo-512.png';
 
 /**
+ * The flat line-art companions, used for every favicon frame.
+ *
+ * The rendered mark does not survive a favicon. Downscaled to 16px its
+ * gradient, bevel and glow average out to a brown smudge on a dark tab strip
+ * and a washed peach one on a light strip — legible as "something orange",
+ * not as a cross and a B. The flat drawings hold both shapes at both sizes.
+ *
+ * FLAT_COMPACT drops the ring and is used at 16 only; see the note in the file
+ * itself for why the ring is the first thing to go.
+ */
+const BC_FLAT = 'C:/Repos/ByteCraftSoftware/design/bytecraft-mark-flat.svg';
+const BC_FLAT_COMPACT =
+  'C:/Repos/ByteCraftSoftware/design/bytecraft-mark-flat-compact.svg';
+
+/**
  * Turn the mark's black backdrop into transparency by making alpha follow
  * brightness: pure black becomes fully transparent, the glow fades out as it
  * dims, and the gold stays solid.
@@ -82,16 +97,14 @@ const TARGETS = [
     keyGlow: true, // sits in a tinted, rounded chip — a black square shows
   },
   {
-    from: BC_MASTER,
+    from: BC_FLAT,
     out: 'C:/Repos/ByteCraftSoftware/public/favicon-32.png',
     size: 32,
-    keyGlow: true, // a tab strip may be light or dark; transparency suits both
   },
   {
-    from: BC_MASTER,
+    from: BC_FLAT_COMPACT,
     out: 'C:/Repos/ByteCraftSoftware/public/favicon-16.png',
     size: 16,
-    keyGlow: true,
   },
   {
     from: BC_MASTER,
@@ -160,9 +173,9 @@ const TARGETS = [
  */
 const ICOS = [
   {
-    from: BC_MASTER,
+    // Per-size sources: the ring survives at 32 and 48, not at 16.
+    bySize: { 16: BC_FLAT_COMPACT, 32: BC_FLAT, 48: BC_FLAT },
     out: 'C:/Repos/ByteCraftSoftware/public/favicon.ico',
-    keyGlow: true,
   },
   {
     from: 'C:/Repos/Punchd/web/public/icons/icon-512.png',
@@ -172,13 +185,14 @@ const ICOS = [
 
 const ICO_SIZES = [16, 32, 48];
 
-async function buildIco(from, out, keyGlow = false) {
-  const source = keyGlow ? await keyGlowToAlpha(from) : from;
+async function buildIco({ from, bySize, out, keyGlow = false }) {
+  const keyed = keyGlow && from ? await keyGlowToAlpha(from) : null;
   const frames = [];
   for (const size of ICO_SIZES) {
+    const source = bySize ? bySize[size] : (keyed ?? from);
     frames.push({
       size,
-      data: await sharp(source)
+      data: await sharp(source, { density: 384 })
         .resize(size, size, {
           fit: 'contain',
           background: { r: 0, g: 0, b: 0, alpha: 0 },
@@ -220,7 +234,7 @@ async function buildIco(from, out, keyGlow = false) {
 async function main() {
   for (const t of TARGETS) {
     const source = t.keyGlow ? await keyGlowToAlpha(t.from) : t.from;
-    let img = sharp(source).resize(t.size, t.size, {
+    let img = sharp(source, { density: 384 }).resize(t.size, t.size, {
       fit: 'contain',
       background: { r: 0, g: 0, b: 0, alpha: 0 },
     });
@@ -240,7 +254,7 @@ async function main() {
   }
 
   for (const ico of ICOS) {
-    const size = await buildIco(ico.from, ico.out, ico.keyGlow);
+    const size = await buildIco(ico);
     const repo = ico.out.split('/')[3];
     console.log(
       `${'favicon.ico'.padEnd(24)} ${ICO_SIZES.join('/')}  ${(size / 1024).toFixed(1)} KB  (${repo})`,
