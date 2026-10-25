@@ -52,6 +52,8 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
+          # Only hands the build to the deploy job; the 90-day default filled the org's 0.5 GB Actions storage (2026-10-25).
+          retention-days: 1
           name: site
           path: |
             dist
