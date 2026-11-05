@@ -27,6 +27,7 @@
  */
 const sharp = require('sharp');
 const fs = require('fs');
+const { keyGlowToAlpha } = require('./key-glow.cjs');
 
 /**
  * The Byte Craft mark, 2026-10-24: the gold circuit-B with the cross. Supplied
@@ -53,40 +54,6 @@ const BC_FLAT = 'C:/Repos/ByteCraftSoftware/design/bytecraft-mark-flat.svg';
 const BC_FLAT_COMPACT =
   'C:/Repos/ByteCraftSoftware/design/bytecraft-mark-flat-compact.svg';
 
-/**
- * Turn the mark's black backdrop into transparency by making alpha follow
- * brightness: pure black becomes fully transparent, the glow fades out as it
- * dims, and the gold stays solid.
- *
- * NOT `tools/key-bg.cjs`, which is the right tool for the sibling apps and the
- * wrong one here. That flood-fills inward from the border with a tolerance,
- * which assumes a FLAT tile. This mark has a glow that fades gradually into
- * black, so a tolerance key cuts it at whatever brightness the threshold lands
- * on and leaves a hard dark halo — and because the fill only removes
- * background connected to the edge, the black enclosed INSIDE the ring
- * survives and shows as a black disc on any light background.
- *
- * The cost of this approach is that the artwork's own dark bevel shading goes
- * semi-transparent too, so the mark reads slightly lighter. On the dark header
- * it is the right trade; it is why `apple-touch-icon` opts out below and keeps
- * the opaque original, which is also what iOS wants.
- */
-async function keyGlowToAlpha(src) {
-  const { data, info } = await sharp(src)
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-
-  for (let i = 0; i < data.length; i += info.channels) {
-    data[i + 3] = Math.max(data[i], data[i + 1], data[i + 2]);
-  }
-
-  return sharp(data, {
-    raw: { width: info.width, height: info.height, channels: 4 },
-  })
-    .png()
-    .toBuffer();
-}
 
 const TARGETS = [
   // ── Byte Craft Software ────────────────────────────────────────────────

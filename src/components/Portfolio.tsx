@@ -3,6 +3,12 @@ import Section from "./Section";
 
 type Project = {
   name: string;
+  /**
+   * What our involvement is — which, for everything but the litter box, is all
+   * of it. These used to read "Architecture, full-stack development", phrasing
+   * that belongs on a credit for a client's project rather than on our own
+   * product.
+   */
   role: string;
   summary: string;
   /**
@@ -32,7 +38,7 @@ const NEUTRAL_STATUS = "bg-slate-100 text-slate-600 border-slate-200";
 const projects: Project[] = [
   {
     name: "Dojo Companion",
-    role: "Architecture, full-stack development",
+    role: "Designed, built and operated in-house",
     summary:
       "Multi-tenant SaaS that runs a martial-arts school end to end: students, parents and prospects, classes and events with attendance, belt progression built on the paper stripe cards instructors already used, a store with per-dojo Stripe payouts, and messaging that reaches families by email, SMS or push. One deployment serves many dojos, each with its own data, branding and billing.",
     highlights: [
@@ -50,7 +56,7 @@ const projects: Project[] = [
   },
   {
     name: "Punchd",
-    role: "Architecture, full-stack development",
+    role: "Designed, built and operated in-house",
     summary:
       "Time tracking and payroll prep for small businesses. Employees punch in from their phone; owners and managers get timecards with configurable rounding, recurring and one-off shift scheduling, open shifts staff claim themselves, time-off requests with approval rules, and overtime estimates for the state the work actually happens in. Deliberately payroll prep rather than a payroll system — it tells you the hours, it doesn't pretend to be your compliance department.",
     highlights: [
@@ -69,7 +75,7 @@ const projects: Project[] = [
   },
   {
     name: "Long Rest",
-    role: "Architecture, full-stack development",
+    role: "Designed, built and operated in-house",
     summary:
       "Scheduling and chat for tabletop campaigns, built to replace a nine-player availability spreadsheet. Availability is a time window rather than a flat yes or no, quorum knows the night needs whoever is running the game and not just a headcount, and conflicts are detected across every campaign a person plays in. Session proposals, a campaign chat, and recaps the AI drafts from the notes the table already wrote.",
     highlights: [
