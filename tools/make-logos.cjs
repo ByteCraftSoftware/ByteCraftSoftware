@@ -27,17 +27,25 @@
  */
 const sharp = require('sharp');
 const fs = require('fs');
-const { keyGlowToAlpha } = require('./key-glow.cjs');
 
 /**
- * The Byte Craft mark, 2026-10-24: the gold circuit-B with the cross. Supplied
- * at 512 and already opaque on black, so nothing here flattens it.
+ * The Byte Craft mark: the gold circuit-B with the cross, 512px with a REAL
+ * alpha channel (2026-11-05).
  *
- * `bytecraft-logo-1024.png` beside it is the PREVIOUS mark — flat orange on
- * transparent — kept for history. Do not point this at that file; it will
- * silently reinstate the old logo everywhere on the next run.
+ * It replaced `bytecraft-logo-512.png`, the same artwork rendered opaque on
+ * black. That one had to be faked transparent by making alpha follow
+ * brightness, which dropped the bevel's dark shading to semi-transparent: the
+ * mark came out lighter, with a faint halo, and on a white surface it washed
+ * out badly. Cut properly, it needs no keying at all and holds its edges on
+ * both dark and light.
+ *
+ * Two older files sit beside it in `design/`, neither of which this should
+ * ever point at: `bytecraft-logo-512.png` (the opaque-on-black render of this
+ * same mark) and `bytecraft-logo-1024.png` (the PREVIOUS flat orange mark,
+ * before the cross). Pointing at the latter silently reinstates the old logo
+ * everywhere on the next run.
  */
-const BC_MASTER = 'C:/Repos/ByteCraftSoftware/design/bytecraft-logo-512.png';
+const BC_MASTER = 'C:/Repos/ByteCraftSoftware/design/bytecraft-mark-512.png';
 
 /**
  * The flat line-art companions, used for every favicon frame.
@@ -61,7 +69,16 @@ const TARGETS = [
     from: BC_MASTER,
     out: 'C:/Repos/ByteCraftSoftware/public/bytecraft-logo.png',
     size: 96, // header renders it at 28px, privacy page at 30px
-    keyGlow: true, // sits in a tinted, rounded chip — a black square shows
+  },
+  {
+    // Profile logo for platforms that composite onto WHITE — LinkedIn, and any
+    // other directory listing. Not served by the site, which is why it lands in
+    // design/. The mark itself is fine on white now that it has true alpha;
+    // this exists so those uploads come from a fixed, known-good file rather
+    // than whichever copy is nearest to hand.
+    from: BC_MASTER,
+    out: 'C:/Repos/ByteCraftSoftware/design/bytecraft-mark-400.png',
+    size: 400, // LinkedIn renders page logos up to 300px; 400 leaves headroom
   },
   {
     from: BC_FLAT,
@@ -77,8 +94,10 @@ const TARGETS = [
     from: BC_MASTER,
     out: 'C:/Repos/ByteCraftSoftware/public/apple-touch-icon.png',
     size: 180,
-    // No `flattenTo`: the 2026-10-24 mark is already opaque on black, so there
-    // is no alpha for iOS to composite onto white in the first place.
+    // iOS composites alpha onto WHITE and the mark is transparent now, so this
+    // one is flattened back onto the near-black it was drawn against. Without
+    // it the home-screen icon is gold-on-white, which is not the mark.
+    flattenTo: '#0b0b0b',
   },
 
   // ── Long Rest ──────────────────────────────────────────────────────────
@@ -152,11 +171,10 @@ const ICOS = [
 
 const ICO_SIZES = [16, 32, 48];
 
-async function buildIco({ from, bySize, out, keyGlow = false }) {
-  const keyed = keyGlow && from ? await keyGlowToAlpha(from) : null;
+async function buildIco({ from, bySize, out }) {
   const frames = [];
   for (const size of ICO_SIZES) {
-    const source = bySize ? bySize[size] : (keyed ?? from);
+    const source = bySize ? bySize[size] : from;
     frames.push({
       size,
       data: await sharp(source, { density: 384 })
@@ -200,8 +218,7 @@ async function buildIco({ from, bySize, out, keyGlow = false }) {
 
 async function main() {
   for (const t of TARGETS) {
-    const source = t.keyGlow ? await keyGlowToAlpha(t.from) : t.from;
-    let img = sharp(source, { density: 384 }).resize(t.size, t.size, {
+    let img = sharp(t.from, { density: 384 }).resize(t.size, t.size, {
       fit: 'contain',
       background: { r: 0, g: 0, b: 0, alpha: 0 },
     });

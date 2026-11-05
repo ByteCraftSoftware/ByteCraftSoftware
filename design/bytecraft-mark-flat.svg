@@ -13,6 +13,10 @@
   Stroke weights are deliberate: at a 64 viewBox, 4.5 and 5 render at ~2.2px and
   ~2.5px when rasterised to 32. Anything thinner greys out at that size instead
   of reading as a line.
+
+  The crossbar sits in the upper THIRD of the upright, not at its midpoint. A
+  centred bar reads as a plus sign — or worse, a medical cross — which is not
+  the symbol intended.
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <circle cx="32" cy="32" r="28" fill="none" stroke="#EF7603" stroke-width="4.5"/>
@@ -20,7 +24,7 @@
     <path d="M29 18 V46"/>
     <path d="M29 18 H38 a7 7 0 0 1 0 14 H29"/>
     <path d="M29 32 H39 a7 7 0 0 1 0 14 H29"/>
-    <path d="M17 22 V44"/>
-    <path d="M10 29 H24"/>
+    <path d="M17 19 V46"/>
+    <path d="M10 26 H24"/>
   </g>
 </svg>

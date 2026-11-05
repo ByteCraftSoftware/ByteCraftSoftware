@@ -20,7 +20,7 @@
     <path d="M30 12 V52"/>
     <path d="M30 12 H42 a10 10 0 0 1 0 20 H30"/>
     <path d="M30 32 H44 a10 10 0 0 1 0 20 H30"/>
-    <path d="M14 16 V48"/>
-    <path d="M5 27 H23"/>
+    <path d="M14 14 V50"/>
+    <path d="M5 24 H23"/>
   </g>
 </svg>

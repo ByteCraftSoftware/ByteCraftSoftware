@@ -19,7 +19,6 @@
 const sharp = require('sharp');
 const path = require('path');
 const { keyOutBackground } = require('./key-bg.cjs');
-const { keyGlowToAlpha } = require('./key-glow.cjs');
 
 const W = 1200;
 const H = 630;
@@ -61,17 +60,13 @@ const CARDS = [
     out: 'C:/Repos/ByteCraftSoftware/public/og.png',
     // The 512 master, not public/bytecraft-logo.png — that one is the 96px
     // header derivative, and rendering it at 190px here upscales it to mush.
-    logo: 'C:/Repos/ByteCraftSoftware/design/bytecraft-logo-512.png',
+    logo: 'C:/Repos/ByteCraftSoftware/design/bytecraft-mark-512.png',
     name: 'Byte Craft Software',
     lines: ['We build and run', 'software that lasts.'],
     domain: 'bytecraftsoftware.com',
     bg: '#0f172a',
     accent: '#fb923c',
     glow: '#ef7603',
-    // keyGlow, not keyBg: this mark is a glow fading into black rather than
-    // artwork on a flat tile. See tools/key-glow.cjs for why the flood fill
-    // is the wrong tool here.
-    keyGlow: true,
   },
 ];
 
@@ -133,7 +128,6 @@ function card(c) {
 
     let src = await sharp(c.logo).png().toBuffer();
     if (c.keyBg) src = await keyOutBackground(src);
-    if (c.keyGlow) src = await keyGlowToAlpha(src);
 
     const logo = await sharp(src)
       .resize(LOGO, LOGO, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
