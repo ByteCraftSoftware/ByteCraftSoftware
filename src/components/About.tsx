@@ -13,6 +13,13 @@ import Section from "./Section";
  * The closing paragraph is deliberate too: outside work is welcome but is not
  * the business, and it is what gives the contact form a reason to exist for a
  * visitor who is not already a customer.
+ *
+ * The faith line is anchored in behaviour rather than left as a label. The
+ * cross in the mark already states the identity; what a visitor who does not
+ * share it can still act on is the pricing and the sales conduct, so that is
+ * what the sentence promises. It sits here and nowhere in the products:
+ * Punchd, Dojo Companion and Long Rest serve audiences selected by need, and
+ * the same words inside a timecard app read as imposed rather than offered.
  */
 const About: React.FC = () => {
   return (
@@ -30,6 +37,11 @@ const About: React.FC = () => {
         still maintainable six months from now — and we like messy, real-world
         problems: the availability spreadsheet nobody can read on a phone, the
         timecards still kept on paper.
+      </p>
+      <p>
+        Byte Craft Software is a <strong>Christian-owned company</strong>. In
+        practice that means plain pricing, no dark patterns, and telling you
+        when you don&apos;t need the thing you&apos;re about to buy.
       </p>
       <p>
         Products are the focus, but not the whole story. If you&apos;ve got
